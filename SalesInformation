@@ -1,0 +1,100 @@
+@@ -0,0 +1,99 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package vending;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.Date;
+import java.util.TimeZone;
+
+/**
+ *
+ * @author Shaswat
+ */
+public class SalesInformation {
+
+    private static final String SALES_REPORT = "vendingsales.txt";
+
+    private final int dispenserNumber;
+
+    private Double sales;
+
+    private final String itemName;
+
+    private int quantity;
+
+    public SalesInformation(int dispenserNumber, String itemName) {
+        this.dispenserNumber = dispenserNumber;
+        this.itemName = itemName;
+        this.sales = 0.0;
+        this.quantity = 0;
+    }
+
+    public int getDispenserNumber() {
+        return this.dispenserNumber;
+    }
+
+    public Double getSales() {
+        return this.sales;
+    }
+
+    public void addSales(Double amt) {
+        this.sales += amt;
+    }
+
+    public String getItemName() {
+        return this.itemName;
+    }
+
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    public void addQuantity() {
+        this.quantity++;
+    }
+
+    public static void displaySalesInformation(Map<Integer, SalesInformation> salesInfos) {
+        System.out.println("******SALES REPORT******");
+        for (Map.Entry<Integer, SalesInformation> kvp : salesInfos.entrySet()) {
+            if (kvp.getValue().getQuantity() > 0) {
+                System.out.println("Dispesner Number: " + kvp.getKey()
+                        + "\tName: " + kvp.getValue().getItemName()
+                        + "\tQuantity: " + kvp.getValue().getQuantity()
+                        + "\tSales: " + kvp.getValue().getSales());
+            }
+        }
+    }
+
+    public static void writeSalesToFile(Map<Integer, SalesInformation> salesInfos) throws VendingException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(SALES_REPORT))) {
+            bw.write("******SALES REPORT******");
+            bw.newLine();
+            for (Map.Entry<Integer, SalesInformation> kvp : salesInfos.entrySet()) {
+                if (kvp.getValue().getQuantity() > 0) {
+                    bw.write("Dispesner Number: " + kvp.getKey()
+                            + "\tName: " + kvp.getValue().getItemName()
+                            + "\tQuantity: " + kvp.getValue().getQuantity()
+                            + "\tSales: " + kvp.getValue().getSales());
+                    bw.newLine();
+                }
+            }
+        } catch (Exception e) {
+            throw new VendingException("Problem writing file: " + SALES_REPORT);
+        }
+Date input = new Date();
+Calendar cal = Calendar.getInstance();
+cal.setTime(input);
+LocalDate date = LocalDate.of(cal.get(Calendar.YEAR),
+        cal.get(Calendar.MONTH) + 1,
+        cal.get(Calendar.DAY_OF_MONTH));
+    }
+}
